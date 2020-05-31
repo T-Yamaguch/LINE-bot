@@ -68,7 +68,13 @@ def callback():
 
         line_bot_api.reply_message(
             event.reply_token,
-            TextSendMessage(text="Hello")
+            #TextSendMessage(text="Hello")
+            TextSendMessage(text=event.message.text)
+        )
+
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="こみえん！")
             #TextSendMessage(text=event.message.text)
         )
 
