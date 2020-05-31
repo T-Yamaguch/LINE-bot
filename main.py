@@ -179,7 +179,7 @@ def handle_text_message(event):
             event.reply_token,
             ImageSendMessage(url, url)
         )
-    elif text.startswith('kom igjen' or 'こみえん' or 'コミエン') :
+    elif text.startswith('kom') or text.startswith('こみえん') or text.startswith('コミエン') or text.startswith('Kom') :
         url = request.url_root + '/static/sample.jpg'
         app.logger.info("url=" + url)
         line_bot_api.reply_message(
