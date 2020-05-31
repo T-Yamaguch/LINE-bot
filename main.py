@@ -179,6 +179,13 @@ def handle_text_message(event):
             event.reply_token,
             ImageSendMessage(url, url)
         )
+    elif text.startswith('kom igjen' or 'こみえん' or 'コミエン') :
+        url = request.url_root + '/static/sample.jpg'
+        app.logger.info("url=" + url)
+        line_bot_api.reply_message(
+            event.reply_token,
+            ImageSendMessage(url, url)
+        )    
     elif text == 'confirm':
         confirm_template = ConfirmTemplate(text='Do it?', actions=[
             MessageAction(label='Yes', text='Yes!'),
