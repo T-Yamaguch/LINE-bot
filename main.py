@@ -13,7 +13,7 @@
 #  under the License.
 
 ####################
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 from keras.callbacks import LambdaCallback, ModelCheckpoint
 from keras.models import Sequential
 from keras.layers import Dense
@@ -26,41 +26,6 @@ import sys
 import io
 import time
 
-from __future__ import unicode_literals
-
-import datetime
-import errno
-import json
-import os
-import sys
-import tempfile
-from argparse import ArgumentParser
-
-from flask import Flask, request, abort, send_from_directory
-from werkzeug.middleware.proxy_fix import ProxyFix
-
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    LineBotApiError, InvalidSignatureError
-)
-from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
-    SourceUser, SourceGroup, SourceRoom,
-    TemplateSendMessage, ConfirmTemplate, MessageAction,
-    ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URIAction,
-    PostbackAction, DatetimePickerAction,
-    CameraAction, CameraRollAction, LocationAction,
-    CarouselTemplate, CarouselColumn, PostbackEvent,
-    StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
-    ImageMessage, VideoMessage, AudioMessage, FileMessage,
-    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent,
-    MemberJoinedEvent, MemberLeftEvent,
-    FlexSendMessage, BubbleContainer, ImageComponent, BoxComponent,
-    TextComponent, SpacerComponent, IconComponent, ButtonComponent,
-    SeparatorComponent, QuickReply, QuickReplyButton,
-    ImageSendMessage)
 
 
 path = 'static/sandwichman.txt'
@@ -134,6 +99,39 @@ def generate_sentence():
     return result
 ####################
 
+import datetime
+import errno
+import json
+import os
+import sys
+import tempfile
+from argparse import ArgumentParser
+
+from flask import Flask, request, abort, send_from_directory
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+from linebot import (
+    LineBotApi, WebhookHandler
+)
+from linebot.exceptions import (
+    LineBotApiError, InvalidSignatureError
+)
+from linebot.models import (
+    MessageEvent, TextMessage, TextSendMessage,
+    SourceUser, SourceGroup, SourceRoom,
+    TemplateSendMessage, ConfirmTemplate, MessageAction,
+    ButtonsTemplate, ImageCarouselTemplate, ImageCarouselColumn, URIAction,
+    PostbackAction, DatetimePickerAction,
+    CameraAction, CameraRollAction, LocationAction,
+    CarouselTemplate, CarouselColumn, PostbackEvent,
+    StickerMessage, StickerSendMessage, LocationMessage, LocationSendMessage,
+    ImageMessage, VideoMessage, AudioMessage, FileMessage,
+    UnfollowEvent, FollowEvent, JoinEvent, LeaveEvent, BeaconEvent,
+    MemberJoinedEvent, MemberLeftEvent,
+    FlexSendMessage, BubbleContainer, ImageComponent, BoxComponent,
+    TextComponent, SpacerComponent, IconComponent, ButtonComponent,
+    SeparatorComponent, QuickReply, QuickReplyButton,
+    ImageSendMessage)
 
 app = Flask(__name__)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_host=1, x_proto=1)
