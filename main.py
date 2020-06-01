@@ -66,8 +66,8 @@ def generate_sentence():
     for i in range (900):
       sentence.append(indices_char[i])
     random.shuffle(sentence)
-    sentence = sentence[:1]
-    sentence.append('\n')
+    sentence = sentence[:2]
+#    sentence.append('\n')
     print(sentence)
   
     for i in range(20):
