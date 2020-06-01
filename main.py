@@ -96,7 +96,7 @@ def generate_sentence():
               break
 
     result=''.join(generated)
-    print (result)
+    #print (result)
     return result
 ####################
 
