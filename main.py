@@ -41,7 +41,7 @@ for word in chars:
        char_indices[word] = count  # 登録する      
        count +=1
 indices_char = dict([(value, key) for (key, value) in char_indices.items()])
-char_indices = {}
+
 # build the model: a single LSTM
 print('Build model...')
 model = Sequential()
