@@ -91,7 +91,7 @@ def generate_sentence():
 
         if "\n" in next_char :
             return_num += 1
-            if return_num == 2:
+            if return_num == 3:
               break
 
     result=''.join(generated)
