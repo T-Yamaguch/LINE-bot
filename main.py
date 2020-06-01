@@ -25,7 +25,7 @@ import random
 import sys
 import io
 import time
-
+import tflite_runtime.interpreter as tflite
 
 
 path = 'static/sandwichman.txt'
