@@ -12,6 +12,91 @@
 #  License for the specific language governing permissions and limitations
 #  under the License.
 
+####################
+from __future__ import print_function
+from keras.callbacks import LambdaCallback, ModelCheckpoint
+from keras.models import Sequential
+from keras.layers import Dense
+from keras.layers import LSTM
+from keras.optimizers import RMSprop
+from janome.tokenizer import Tokenizer
+import numpy as np
+import random
+import sys
+import io
+import time
+
+path = 'static/sandwichman.txt'
+with io.open(path, encoding='utf-8') as f:
+    text = f.read().lower()
+text =Tokenizer().tokenize(text, wakati=True)  # 分かち書きする
+chars = text
+count = 0
+char_indices = {}  # 辞書初期化
+indices_char = {}  # 逆引き辞書初期化
+maxlen = 4 
+for word in chars:
+    if not word in char_indices:  # 未登録なら
+       char_indices[word] = count  # 登録する      
+       count +=1
+indices_char = dict([(value, key) for (key, value) in char_indices.items()])
+# build the model: a single LSTM
+print('Build model...')
+model = Sequential()
+model.add(LSTM(128, input_shape=(maxlen, len(chars))))
+model.add(Dense(len(chars), activation='softmax'))
+
+model.load_weights('static/checkpoint')
+
+def sample(preds, temperature=1.0):
+    preds = np.asarray(preds).astype('float64')
+    preds = np.log(preds) / temperature
+    exp_preds = np.exp(preds)
+    preds = exp_preds / np.sum(exp_preds)
+    probas = np.random.multinomial(1, preds, 1)
+    return np.argmax(probas)
+
+def generate_sentence():
+    diversity = 0.5   
+    generated = ''
+    sentence = []
+
+    for i in range (900):
+      sentence.append(indices_char[i])
+    random.shuffle(sentence)
+    sentence = sentence[:3]
+    sentence.append('\n')
+    print(sentence)
+  
+    for i in range(20):
+        return_num = 0
+        
+        x_pred = np.zeros((1, maxlen, len(chars)))
+        for t, char in enumerate(sentence):
+            x_pred[0, t, char_indices[char]] = 1.
+
+        preds = model.predict(x_pred, verbose=0)[0]
+        next_index = sample(preds, diversity)
+        next_char = indices_char[next_index]
+
+        if next_char == "。":
+            pass
+
+
+        generated += next_char
+        sentence = sentence[1:]
+
+        sentence.append(next_char)  
+
+        if "\n" in next_char :
+            return_num += 1
+            if return_num == 1:
+              break
+
+    result=''.join(generated)
+    return result
+####################
+
 from __future__ import unicode_literals
 
 import datetime
@@ -538,8 +623,10 @@ def handle_text_message(event):
             messages = [TextSendMessage(text='available: false')]
         line_bot_api.reply_message(event.reply_token, messages)
     else:
+#         line_bot_api.reply_message(
+#             event.reply_token, TextSendMessage(text=event.message.text))
         line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text=event.message.text))
+            event.reply_token, TextSendMessage(text=generate_sentence()))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
@@ -674,6 +761,7 @@ def handle_member_left(event):
 @app.route('/static/<path:path>')
 def send_static_content(path):
     return send_from_directory('static', path)
+
 
 
 if __name__ == "__main__":
