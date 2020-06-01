@@ -35,7 +35,7 @@ chars = text
 count = 0
 char_indices = {}  # 辞書初期化
 indices_char = {}  # 逆引き辞書初期化
-maxlen = 4 
+maxlen = 2 
 for word in chars:
     if not word in char_indices:  # 未登録なら
        char_indices[word] = count  # 登録する      
@@ -91,7 +91,7 @@ def generate_sentence():
 
         if "\n" in next_char :
             return_num += 1
-            if return_num == 1:
+            if return_num == 2:
               break
 
     result=''.join(generated)
