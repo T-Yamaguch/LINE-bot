@@ -59,7 +59,7 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 def generate_sentence():
-    diversity = 0.5   
+    diversity = 0.2   
     generated = ''
     sentence = []
 
