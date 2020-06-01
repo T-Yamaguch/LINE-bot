@@ -59,7 +59,7 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 def generate_sentence():
-    diversity = 0.2   
+    diversity = 0.7   
     generated = ''
     sentence = []
 
@@ -83,8 +83,10 @@ def generate_sentence():
 
         if "\n" in next_char :
             return_num += 1
-            if return_num == 1:
-              break
+            if return_num == 3:
+                break
+            else:
+                pass
 
         generated += next_char
         sentence = sentence[1:]
