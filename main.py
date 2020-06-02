@@ -216,10 +216,14 @@ def handle_text_message(event):
                 TextSendMessage(text='total usage: ' + str(quota_consumption.total_usage)),
             ]
         )
+#     elif text == 'push':
+#         line_bot_api.push_message(
+#             event.source.user_id, [
+#                 TextSendMessage(text='PUSH!'),
     elif text == 'push':
         line_bot_api.push_message(
             event.source.user_id, [
-                TextSendMessage(text='PUSH!'),
+                TextSendMessage(text='テストだよ'),
             ]
         )
     elif text == 'multicast':
