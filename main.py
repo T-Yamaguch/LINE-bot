@@ -64,7 +64,7 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 def generate_sentence(input_sentence):
-    diversity = 0.3   
+    diversity = 0.7   
     generated = ''
     print (input_sentence)
     sentence = Tokenizer().tokenize(input_sentence, wakati=True)
