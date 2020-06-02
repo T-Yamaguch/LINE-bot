@@ -50,7 +50,7 @@ indices_char = dict([(value, key) for (key, value) in char_indices.items()])
 # build the model: a single LSTM
 print('Build model...')
 model = Sequential()
-model.add(LSTM(128, input_shape=(maxlen, len(chars))))
+model.add(LSTM(64, input_shape=(maxlen, len(chars))))
 model.add(Dense(len(chars), activation='softmax'))
 
 model.load_weights('static/checkpoint')
