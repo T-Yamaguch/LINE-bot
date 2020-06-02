@@ -43,7 +43,7 @@ for word in chars:
     if not word in char_indices:  # 未登録なら
        count +=1
        char_indices[word] = count  # 登録する      
-       print(count,word)  # 登録した単語を表示
+       #print(count,word)  # 登録した単語を表示
 # 逆引き辞書を辞書から作成する
 indices_char = dict([(value, key) for (key, value) in char_indices.items()])
 
