@@ -69,8 +69,8 @@ def generate_sentence(input_sentence):
     print (input_sentence)
     sentence = Tokenizer().tokenize(input_sentence, wakati=True)
     
-    if len(sentece) > 3:
-        sentece = sentece[-3:]
+    if len(sentence) > 3:
+        sentence = sentence[-3:]
     sentence.append('\n')
   
     for i in range(20):
