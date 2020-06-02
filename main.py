@@ -36,7 +36,7 @@ chars = text
 count = 0
 char_indices = {}  # 辞書初期化
 indices_char = {}  # 逆引き辞書初期化
-
+maxlen = 4
 char_indices["\n"] = count
 
 for word in chars:
@@ -71,6 +71,7 @@ def generate_sentence(input_sentence):
     
     if len(sentece) > 3:
         sentece = sentece[-3:]
+    sentence.append('\n')
   
     for i in range(20):
         return_num = 0
