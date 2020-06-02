@@ -67,7 +67,7 @@ def generate_sentence(input_sentence):
     generated = ''
     sentence = []
 
-    for i in range (len(chars)):
+    for i in range ():
       sentence.append(indices_char[i])
     random.shuffle(sentence)
     sentence = sentence[:1]
