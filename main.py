@@ -30,16 +30,21 @@ import time
 path = 'static/sandwichman.txt'
 with io.open(path, encoding='utf-8') as f:
     text = f.read().lower()
+
 text =Tokenizer().tokenize(text, wakati=True)  # 分かち書きする
 chars = text
 count = 0
 char_indices = {}  # 辞書初期化
 indices_char = {}  # 逆引き辞書初期化
-maxlen = 2 
+
+char_indices["\n"] = count
+
 for word in chars:
     if not word in char_indices:  # 未登録なら
-       char_indices[word] = count  # 登録する      
        count +=1
+       char_indices[word] = count  # 登録する      
+       print(count,word)  # 登録した単語を表示
+# 逆引き辞書を辞書から作成する
 indices_char = dict([(value, key) for (key, value) in char_indices.items()])
 
 # build the model: a single LSTM
@@ -58,45 +63,39 @@ def sample(preds, temperature=1.0):
     probas = np.random.multinomial(1, preds, 1)
     return np.argmax(probas)
 
-def generate_sentence():
-    diversity = 0.7   
+def generate_sentence(input_sentence):
+    diversity = 0.3   
     generated = ''
-    sentence = []
-
-    for i in range (900):
-      sentence.append(indices_char[i])
-    random.shuffle(sentence)
-    sentence = sentence[:1]
-    sentence.append('\n')
-    print(sentence)
+    print (input_sentence)
+    sentence = Tokenizer().tokenize(input_sentence, wakati=True)
+    
+    if len(input_sentence) > 3:
+        sentece = [-3:]
   
     for i in range(20):
         return_num = 0
         
         x_pred = np.zeros((1, maxlen, len(chars)))
         for t, char in enumerate(sentence):
-            x_pred[0, t, char_indices[char]] = 1.
+            if char in char_indices:
+                x_pred[0, t, char_indices[char]] = 1.
+            else:
+                x_pred[0, t, 0] = 1.
 
         preds = model.predict(x_pred, verbose=0)[0]
         next_index = sample(preds, diversity)
         next_char = indices_char[next_index]
 
         if "\n" in next_char :
-            return_num += 1
-            if return_num == 3:
+            if len(generated) > 5:
                 break
-            else:
-                pass
-
+                
         generated += next_char
         sentence = sentence[1:]
-
         sentence.append(next_char)  
-
-
-
+        
     result=''.join(generated)
-    #print (result)
+    print (result)
     return result
 ####################
 
@@ -627,7 +626,7 @@ def handle_text_message(event):
 #         line_bot_api.reply_message(
 #             event.reply_token, TextSendMessage(text=event.message.text))
         line_bot_api.reply_message(
-            event.reply_token, TextSendMessage(text=generate_sentence()))
+            event.reply_token, TextSendMessage(text=generate_sentence(event.message.text)))
 
 
 @handler.add(MessageEvent, message=LocationMessage)
