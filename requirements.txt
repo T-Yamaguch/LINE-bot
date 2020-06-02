@@ -4,4 +4,4 @@ werkzeug>=0.15.4
 janome
 keras
 numpy
-tensorflow
+tensorflow == 2.0.0
