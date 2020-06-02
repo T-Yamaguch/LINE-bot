@@ -36,7 +36,7 @@ chars = text
 count = 0
 char_indices = {}  # 辞書初期化
 indices_char = {}  # 逆引き辞書初期化
-maxlen = 4
+maxlen = 2
 char_indices["\n"] = count
 
 for word in chars:
@@ -48,9 +48,8 @@ for word in chars:
 indices_char = dict([(value, key) for (key, value) in char_indices.items()])
 
 # build the model: a single LSTM
-print('Build model...')
 model = Sequential()
-model.add(LSTM(64, input_shape=(maxlen, len(chars))))
+model.add(LSTM(128, input_shape=(maxlen, len(chars))))
 model.add(Dense(len(chars), activation='softmax'))
 
 model.load_weights('static/checkpoint')
@@ -64,14 +63,13 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 def generate_sentence(input_sentence):
-    diversity = 0.7   
+    diversity = 0.5   
     generated = ''
     print (input_sentence)
     sentence = Tokenizer().tokenize(input_sentence, wakati=True)
     
-    if len(sentence) > 3:
-        sentence = sentence[-3:]
-    sentence.append('\n')
+    if len(sentence) > 2:
+        sentence = sentence[-2:]
   
     for i in range(20):
         return_num = 0
@@ -88,7 +86,7 @@ def generate_sentence(input_sentence):
         next_char = indices_char[next_index]
 
         if "\n" in next_char :
-            if len(generated) > 5:
+            if len(generated) > 2:
                 break
                 
         generated += next_char
