@@ -14,18 +14,17 @@
 
 ####################
 from __future__ import print_function, unicode_literals
-from keras.callbacks import LambdaCallback, ModelCheckpoint
-from keras.models import Sequential
-from keras.layers import Dense
-from keras.layers import LSTM
-from keras.optimizers import RMSprop
+from tensorflow.keras.callbacks import LambdaCallback, ModelCheckpoint
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import LSTM
+from tensorflow.keras.optimizers import RMSprop
 from janome.tokenizer import Tokenizer
 import numpy as np
 import random
 import sys
 import io
 import time
-
 
 path = 'static/sandwichman.txt'
 with io.open(path, encoding='utf-8') as f:
@@ -36,7 +35,7 @@ chars = text
 count = 0
 char_indices = {}  # 辞書初期化
 indices_char = {}  # 逆引き辞書初期化
-maxlen = 2
+maxlen = 5
 char_indices["\n"] = count
 
 for word in chars:
@@ -49,10 +48,10 @@ indices_char = dict([(value, key) for (key, value) in char_indices.items()])
 
 # build the model: a single LSTM
 model = Sequential()
-model.add(LSTM(128, input_shape=(maxlen, len(chars))))
+model.add(LSTM(16, input_shape=(maxlen, len(chars))))
 model.add(Dense(len(chars), activation='softmax'))
 
-model.load_weights('static/checkpoint')
+model.load_weights('static/checkpoint/cp.ckpt')
 
 def sample(preds, temperature=1.0):
     preds = np.asarray(preds).astype('float64')
@@ -63,25 +62,28 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 def generate_sentence(input_sentence):
-    diversity = 0.7   
-    generated = ''
-    sentence = []
-
-    for i in range (len(indices_char)):
-      sentence.append(indices_char[i])
-    random.shuffle(sentence)
-    sentence = sentence[:1]
-    sentence.append('\n')
-    print(sentence)
-    
-#     diversity = 0.5   
+#     diversity = 0.7   
 #     generated = ''
-#     print (input_sentence)
-#     sentence = Tokenizer().tokenize(input_sentence, wakati=True)
+#     sentence = []
+
+#     for i in range (len(indices_char)):
+#       sentence.append(indices_char[i])
+#     random.shuffle(sentence)
+#     sentence = sentence[:1]
+#     sentence.append('\n')
+#     print(sentence)
     
-#     if len(sentence) > 1:
-#         sentence = sentence[-1:]
-#     sentence.append("\n")
+    diversity = 0.5   
+    generated = ''
+    print (input_sentence)
+    sentence = Tokenizer().tokenize(input_sentence, wakati=True)
+    
+    if len(sentence) > 4:
+        sentence = sentence[-4:]
+    elif len(sentence) < 4:
+        for q in range(4-len(sentence))
+            sentence.insert(0, 0)
+    sentence.append("\n")
   
     for i in range(20):
         return_num = 0
@@ -98,7 +100,7 @@ def generate_sentence(input_sentence):
         next_char = indices_char[next_index]
 
         if "\n" in next_char :
-            if len(generated) > 2:
+            if len(generated) > 5:
                 break
                 
         generated += next_char
