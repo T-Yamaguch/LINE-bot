@@ -82,7 +82,7 @@ def generate_sentence(input_sentence):
         sentence = sentence[-4:]
     elif len(sentence) < 4:
         for q in range(4-len(sentence)):
-            sentence.insert(0, 0)
+            sentence.insert(0, random.randrange(len(indices_char)) )
     sentence.append("\n")
   
     for i in range(20):
@@ -93,7 +93,7 @@ def generate_sentence(input_sentence):
             if char in char_indices:
                 x_pred[0, t, char_indices[char]] = 1.
             else:
-                x_pred[0, t, 0] = 1.
+                x_pred[0, t, random.randrange(len(indices_char))] = 1.
 
         preds = model.predict(x_pred, verbose=0)[0]
         next_index = sample(preds, diversity)
