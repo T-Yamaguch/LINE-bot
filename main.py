@@ -112,7 +112,7 @@ def generate_sentence(input_sentence):
     return result
 
 def kouhunn():
-    diversity = 0.2
+    diversity = 0.1
     generated = ''
     #print (input_sentence)
     sugoroku = random.randrange(2)
