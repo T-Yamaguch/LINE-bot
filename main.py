@@ -112,12 +112,13 @@ def generate_sentence(input_sentence):
     return result
 
 def kouhunn():
-    diversity = 0.1
+    diversity = 0.2
     generated = ''
     #print (input_sentence)
-    sugoroku = random.randrange(3)
+    sugoroku = random.randrange(2)
     if sugoroku == 1:
         input_sentence = 'いやぁピザ頼んでるのに'
+        sentence = Tokenizer().tokenize(input_sentence, wakati=True)
     else:
         input_sentence = '一番興奮するのは'
         sentence = Tokenizer().tokenize(input_sentence, wakati=True)
