@@ -2,6 +2,5 @@ line-bot-sdk
 flask
 werkzeug>=0.15.4
 janome
-keras
 numpy
 tensorflow == 2.0.0
