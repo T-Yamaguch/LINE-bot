@@ -114,7 +114,7 @@ def generate_sentence(input_sentence):
 def kouhunn():
     diversity = 0.1
     generated = ''
-    print (input_sentence)
+    #print (input_sentence)
     sugoroku = random.randrange(3)
     if sugoroku == 1:
         input_sentence = 'いやぁピザ頼んでるのに'
