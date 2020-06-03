@@ -677,6 +677,9 @@ def handle_text_message(event):
         else:
             messages = [TextSendMessage(text='available: false')]
         line_bot_api.reply_message(event.reply_token, messages)
+    elif '興奮' in text or 'こうふん' in text:
+        line_bot_api.reply_message(
+            event.reply_token, TextSendMessage(text=kouhunn()))   
     else:
 #         line_bot_api.reply_message(
 #             event.reply_token, TextSendMessage(text=event.message.text))
