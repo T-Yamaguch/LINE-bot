@@ -77,13 +77,13 @@ def generate_sentence(input_sentence):
     generated = ''
     print (input_sentence)
     sentence = Tokenizer().tokenize(input_sentence, wakati=True)
-    
-    if len(sentence) > 4:
-        sentence = sentence[-4:]
-    elif len(sentence) < 4:
-        for q in range(4-len(sentence)):
+    generated += sentence
+
+    if len(sentence) > 5:
+        sentence = sentence[-5:]
+    elif len(sentence) < 5:
+        for q in range(5-len(sentence)):
             sentence.insert(0, indices_char[random.randrange(len(indices_char))] )
-    sentence.append("\n")
   
     for i in range(20):
         return_num = 0
@@ -102,6 +102,44 @@ def generate_sentence(input_sentence):
         if "\n" in next_char :
             if len(generated) > 5:
                 break
+                
+        generated += next_char
+        sentence = sentence[1:]
+        sentence.append(next_char)  
+        
+    result=''.join(generated)
+    print (result)
+    return result
+
+def kouhunn():
+    diversity = 0.1
+    generated = ''
+    print (input_sentence)
+    sugoroku = random.randrange(3)
+    if sugoroku == 1:
+        input_sentence = 'いやぁピザ頼んでるのに'
+    else:
+        input_sentence = '一番興奮するのは'
+        sentence = Tokenizer().tokenize(input_sentence, wakati=True)
+    if len(sentence) > 5:
+        sentence = sentence[-5:]
+    elif len(sentence) < 5:
+        for q in range(4-len(sentence)):
+            sentence.insert(0, indices_char[random.randrange(len(indices_char))] )
+  
+    for i in range(200):
+        return_num = 0
+        
+        x_pred = np.zeros((1, maxlen, len(chars)))
+        for t, char in enumerate(sentence):
+            if char in char_indices:
+                x_pred[0, t, char_indices[char]] = 1.
+            else:
+                x_pred[0, t, random.randrange(len(indices_char))] = 1.
+
+        preds = model.predict(x_pred, verbose=0)[0]
+        next_index = sample(preds, diversity)
+        next_char = indices_char[next_index]
                 
         generated += next_char
         sentence = sentence[1:]
