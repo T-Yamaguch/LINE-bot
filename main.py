@@ -140,11 +140,14 @@ def kouhunn():
         preds = model.predict(x_pred, verbose=0)[0]
         next_index = sample(preds, diversity)
         next_char = indices_char[next_index]
-                
+        if "\n" in next_char :
+            return_num += 1
+            if return_num == 30:
+                break            
         generated += next_char
         sentence = sentence[1:]
         sentence.append(next_char)  
-        
+
     result=''.join(generated)
     print (result)
     return result
