@@ -73,7 +73,7 @@ def generate_sentence(input_sentence):
 #     sentence.append('\n')
 #     print(sentence)
     
-    diversity = 0.5   
+    diversity = 0.2
     generated = ''
     print (input_sentence)
     sentence = Tokenizer().tokenize(input_sentence, wakati=True)
