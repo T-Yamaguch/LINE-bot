@@ -128,7 +128,7 @@ def kouhunn():
         for q in range(4-len(sentence)):
             sentence.insert(0, indices_char[random.randrange(len(indices_char))] )
     generated += input_sentence
-    for i in range(10000):
+    for i in range(300):
         return_num = 0
         
         x_pred = np.zeros((1, maxlen, len(chars)))
@@ -141,10 +141,7 @@ def kouhunn():
         preds = model.predict(x_pred, verbose=0)[0]
         next_index = sample(preds, diversity)
         next_char = indices_char[next_index]
-        if "\n" in next_char :
-            return_num += 1
-            if return_num == 20:
-                break            
+                
         generated += next_char
         sentence = sentence[1:]
         sentence.append(next_char)  
