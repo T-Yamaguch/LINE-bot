@@ -127,7 +127,7 @@ def kouhunn():
         for q in range(4-len(sentence)):
             sentence.insert(0, indices_char[random.randrange(len(indices_char))] )
   
-    for i in range(200):
+    for i in range(10000):
         return_num = 0
         
         x_pred = np.zeros((1, maxlen, len(chars)))
