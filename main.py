@@ -126,7 +126,7 @@ def kouhunn():
     elif len(sentence) < 5:
         for q in range(4-len(sentence)):
             sentence.insert(0, indices_char[random.randrange(len(indices_char))] )
-  
+    generated += input_sentence
     for i in range(10000):
         return_num = 0
         
