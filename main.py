@@ -143,7 +143,7 @@ def kouhunn():
         next_char = indices_char[next_index]
         if "\n" in next_char :
             return_num += 1
-            if return_num == 30:
+            if return_num == 20:
                 break            
         generated += next_char
         sentence = sentence[1:]
