@@ -77,14 +77,13 @@ def generate_sentence(input_sentence):
     generated = ''
     print (input_sentence)
     sentence = Tokenizer().tokenize(input_sentence, wakati=True)
-    generated += sentence
 
-    if len(sentence) > 5:
-        sentence = sentence[-5:]
-    elif len(sentence) < 5:
-        for q in range(5-len(sentence)):
+    if len(sentence) > 4:
+        sentence = sentence[-4:]
+    elif len(sentence) < 4:
+        for q in range(4-len(sentence)):
             sentence.insert(0, indices_char[random.randrange(len(indices_char))] )
-  
+    sentence.append('\n')
     for i in range(20):
         return_num = 0
         
