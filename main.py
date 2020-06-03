@@ -81,7 +81,7 @@ def generate_sentence(input_sentence):
     if len(sentence) > 4:
         sentence = sentence[-4:]
     elif len(sentence) < 4:
-        for q in range(4-len(sentence))
+        for q in range(4-len(sentence)):
             sentence.insert(0, 0)
     sentence.append("\n")
   
