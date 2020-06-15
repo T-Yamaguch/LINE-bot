@@ -66,7 +66,7 @@ static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 #########################################################################
 import tensorflow as tf
 col_model = tf.keras.models.load_model('static/col_model.h5')
-
+col_model.summary()
 import cv2
 import numpy as np
 import random
@@ -93,29 +93,7 @@ def visualise(path):
     prediction = (np.array((prediction+1)*127, np.uint8))
     cv2.imwrite('static/temp.jpg', prediction)
 
-@handler.add(MessageEvent, message=(ImageMessage))
-def handle_content_message(event):
-    if isinstance(event.message, ImageMessage):
-        ext = 'jpg'
-        return
 
-    message_content = line_bot_api.get_message_content(event.message.id)
-    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tef:
-        for chunk in message_content.iter_content():
-            tef.write(chunk)
-        tempfile_path = tef.name
-
-    dist_path = tempfile_path + '.' + ext
-    dist_name = os.path.basename(dist_path)
-    os.rename(tempfile_path, dist_path)
-    visualise(dist_path)
-
-    url = request.url_root + 'static/temp.jpg'
-    app.logger.info("url=" + url)
-    line_bot_api.reply_message(
-        event.reply_token,
-        ImageSendMessage(url, url)
-    )
 
 ##############################################################################
 
@@ -645,7 +623,29 @@ def handle_sticker_message(event):
 #             TextSendMessage(text='Save content.'),
 #             TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
 #         ])
+@handler.add(MessageEvent, message=(ImageMessage))
+def handle_content_message(event):
+    if isinstance(event.message, ImageMessage):
+        ext = 'jpg'
+        return
 
+    message_content = line_bot_api.get_message_content(event.message.id)
+    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tef:
+        for chunk in message_content.iter_content():
+            tef.write(chunk)
+        tempfile_path = tef.name
+
+    dist_path = tempfile_path + '.' + ext
+    dist_name = os.path.basename(dist_path)
+    os.rename(tempfile_path, dist_path)
+    visualise(dist_path)
+
+    url = request.url_root + 'static/temp.jpg'
+    app.logger.info("url=" + url)
+    line_bot_api.reply_message(
+        event.reply_token,
+        ImageSendMessage(url, url)
+    )
 
 
 @handler.add(MessageEvent, message=FileMessage)
