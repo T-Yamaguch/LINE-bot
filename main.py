@@ -83,6 +83,7 @@ def image_read(file_path):
     return img_shape, rgb_img, canny_img
 
 def visualise(path):
+    print ('start')
     img_shape, rgb_img, canny_img = image_read(path)
     canny_img_m = np.reshape(canny_img, [1, 128, 128, 1])
     canny_img_m = np.array(canny_img_m, np.float32) / 128 -1
