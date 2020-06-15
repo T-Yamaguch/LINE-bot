@@ -65,10 +65,9 @@ static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
 #########################################################################
 import tensorflow as tf
-col_model = tf.keras.models.load_model('/static/col_model.h5')
+col_model = tf.keras.models.load_model('static/col_model.h5')
 
 import cv2
-from google.colab.patches import cv2_imshow
 import numpy as np
 import random
 
@@ -92,7 +91,7 @@ def visualise(path):
     w = np.array(img_shape)[1]
     prediction = cv2.resize(prediction[0], (w, h))
     prediction = (np.array((prediction+1)*127, np.uint8))
-    cv2.imwrite('/static/temp.jpg', prediction)
+    cv2.imwrite('static/temp.jpg', prediction)
 
 @handler.add(MessageEvent, message=(ImageMessage))
 def handle_content_message(event):
@@ -111,7 +110,7 @@ def handle_content_message(event):
     os.rename(tempfile_path, dist_path)
     visualise(dist_path)
 
-    url = request.url_root + '/static/temp.jpg'
+    url = request.url_root + 'static/temp.jpg'
     app.logger.info("url=" + url)
     line_bot_api.reply_message(
         event.reply_token,
