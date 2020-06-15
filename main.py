@@ -63,6 +63,68 @@ handler = WebhookHandler(channel_secret)
 
 static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 
+#########################################################################
+import tensorflow as tf
+col_model = tf.keras.models.load_model('/static/col_model.h5')
+
+import cv2
+from google.colab.patches import cv2_imshow
+import numpy as np
+import random
+
+def image_read(file_path):
+    #カラーで読み込み
+    rgb_img = cv2.imread(file_path)
+    img_shape = rgb_img.shape
+    rgb_img = cv2.resize(rgb_img, (128, 128))
+    #グレイ変換
+    grey_img = cv2.cvtColor(rgb_img, cv2.COLOR_BGR2GRAY)
+    #エッジ検出
+    canny_img = cv2.Canny(grey_img, 50, 150) #canny
+    return img_shape, rgb_img, canny_img
+
+def visualise(path):
+    img_shape, rgb_img, canny_img = image_read(path)
+    canny_img_m = np.reshape(canny_img, [1, 128, 128, 1])
+    canny_img_m = np.array(canny_img_m, np.float32) / 128 -1
+    prediction = col_model.predict(canny_img_m)
+    h = np.array(img_shape)[0]
+    w = np.array(img_shape)[1]
+    prediction = cv2.resize(prediction[0], (w, h))
+    prediction = (np.array((prediction+1)*127, np.uint8))
+    cv2.imwrite('/static/temp.jpg', prediction)
+
+@handler.add(MessageEvent, message=(ImageMessage))
+def handle_content_message(event):
+    if isinstance(event.message, ImageMessage):
+        ext = 'jpg'
+        return
+
+    message_content = line_bot_api.get_message_content(event.message.id)
+    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tef:
+        for chunk in message_content.iter_content():
+            tef.write(chunk)
+        tempfile_path = tef.name
+
+    dist_path = tempfile_path + '.' + ext
+    dist_name = os.path.basename(dist_path)
+    os.rename(tempfile_path, dist_path)
+    visualise(dist_path)
+
+    line_bot_api.reply_message(
+        event.reply_token, [
+            TextSendMessage(text='Save content.'),
+            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+        ])
+        
+        url = request.url_root + '/static/temp.jpg'
+        app.logger.info("url=" + url)
+        line_bot_api.reply_message(
+            event.reply_token,
+            ImageSendMessage(url, url)
+        )
+
+##############################################################################
 
 # function for create tmp dir for download content
 def make_static_tmp_dir():
@@ -563,33 +625,34 @@ def handle_sticker_message(event):
     )
 
 
-# Other Message Type
-@handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
-def handle_content_message(event):
-    if isinstance(event.message, ImageMessage):
-        ext = 'jpg'
-    elif isinstance(event.message, VideoMessage):
-        ext = 'mp4'
-    elif isinstance(event.message, AudioMessage):
-        ext = 'm4a'
-    else:
-        return
+# # Other Message Type
+# @handler.add(MessageEvent, message=(ImageMessage, VideoMessage, AudioMessage))
+# def handle_content_message(event):
+#     if isinstance(event.message, ImageMessage):
+#         ext = 'jpg'
+#     elif isinstance(event.message, VideoMessage):
+#         ext = 'mp4'
+#     elif isinstance(event.message, AudioMessage):
+#         ext = 'm4a'
+#     else:
+#         return
 
-    message_content = line_bot_api.get_message_content(event.message.id)
-    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tf:
-        for chunk in message_content.iter_content():
-            tf.write(chunk)
-        tempfile_path = tf.name
+#     message_content = line_bot_api.get_message_content(event.message.id)
+#     with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tef:
+#         for chunk in message_content.iter_content():
+#             tef.write(chunk)
+#         tempfile_path = tef.name
 
-    dist_path = tempfile_path + '.' + ext
-    dist_name = os.path.basename(dist_path)
-    os.rename(tempfile_path, dist_path)
+#     dist_path = tempfile_path + '.' + ext
+#     dist_name = os.path.basename(dist_path)
+#     os.rename(tempfile_path, dist_path)
 
-    line_bot_api.reply_message(
-        event.reply_token, [
-            TextSendMessage(text='Save content.'),
-            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
-        ])
+#     line_bot_api.reply_message(
+#         event.reply_token, [
+#             TextSendMessage(text='Save content.'),
+#             TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
+#         ])
+
 
 
 @handler.add(MessageEvent, message=FileMessage)
