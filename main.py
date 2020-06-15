@@ -642,7 +642,7 @@ def handle_content_message(event):
     os.rename(tempfile_path, dist_path)
 
     image_path=os.path.join('static', 'tmp', dist_name)
-    print (os.path.exists(image_path)))
+    print (os.path.exists(image_path))
 
     visualise(os.path.join(image_path))
     url = request.url_root + '/static/temp.jpg'
