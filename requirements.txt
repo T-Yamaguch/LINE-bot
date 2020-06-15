@@ -2,5 +2,5 @@ line-bot-sdk
 flask
 werkzeug>=0.15.4
 tensorflow-cpu
-opencv-python
+opencv-python-headless
 numpy
