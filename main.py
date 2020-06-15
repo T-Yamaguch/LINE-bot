@@ -92,6 +92,7 @@ def visualise(path):
     prediction = cv2.resize(prediction[0], (w, h))
     prediction = (np.array((prediction+1)*127, np.uint8))
     cv2.imwrite('static/temp.jpg', prediction)
+    print ('done')
 
 
 
