@@ -635,11 +635,14 @@ def handle_content_message(event):
     with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tef:
         for chunk in message_content.iter_content():
             tef.write(chunk)
+            print ('saved')
         tempfile_path = tef.name
 
     dist_path = tempfile_path + '.' + ext
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
+
+    
 
     image_path=os.path.join('static', 'tmp', dist_name)
     print (os.path.exists(image_path))
