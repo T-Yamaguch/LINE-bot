@@ -626,6 +626,7 @@ def handle_sticker_message(event):
 #         ])
 @handler.add(MessageEvent, message=(ImageMessage))
 def handle_content_message(event):
+    print ('image')
     if isinstance(event.message, ImageMessage):
         ext = 'jpg'
         return
@@ -639,8 +640,8 @@ def handle_content_message(event):
     dist_path = tempfile_path + '.' + ext
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
+    os.path.exists(dist_path)
     visualise(dist_path)
-
     url = request.url_root + 'static/temp.jpg'
     app.logger.info("url=" + url)
     line_bot_api.reply_message(
