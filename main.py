@@ -629,6 +629,7 @@ def handle_content_message(event):
     print ('image')
     if isinstance(event.message, ImageMessage):
         ext = 'jpg'
+        print ('jpg')
         return
 
     message_content = line_bot_api.get_message_content(event.message.id)
