@@ -111,18 +111,12 @@ def handle_content_message(event):
     os.rename(tempfile_path, dist_path)
     visualise(dist_path)
 
+    url = request.url_root + '/static/temp.jpg'
+    app.logger.info("url=" + url)
     line_bot_api.reply_message(
-        event.reply_token, [
-            TextSendMessage(text='Save content.'),
-            TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
-        ])
-        
-        url = request.url_root + '/static/temp.jpg'
-        app.logger.info("url=" + url)
-        line_bot_api.reply_message(
-            event.reply_token,
-            ImageSendMessage(url, url)
-        )
+        event.reply_token,
+        ImageSendMessage(url, url)
+    )
 
 ##############################################################################
 
