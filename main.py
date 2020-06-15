@@ -70,7 +70,6 @@ col_model.summary()
 import cv2
 import numpy as np
 import random
-from PIL import Image
 
 def image_read(file_path):
     #カラーで読み込み
@@ -95,8 +94,6 @@ def visualise(path):
     prediction = (np.array((prediction+1)*127, np.uint8))
     cv2.imwrite('static/temp.jpg', prediction)
     print ('done')
-    prediction  = Image.open('temp.jpg')
-    return prediction
 
 
 ##############################################################################
@@ -644,8 +641,8 @@ def handle_content_message(event):
     dist_name = os.path.basename(dist_path)
     os.rename(tempfile_path, dist_path)
 
-    # image_path=os.path.join('static', 'tmp', dist_name)
-    # print (os.path.exists(image_path)))
+    image_path=os.path.join('static', 'tmp', dist_name)
+    print (os.path.exists(image_path)))
 
     visualise(os.path.join(image_path))
     url = request.url_root + '/static/temp.jpg'
