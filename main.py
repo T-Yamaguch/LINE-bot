@@ -85,7 +85,7 @@ def image_read(file_path):
     canny_img = cv2.Canny(grey_img, 50, 150) #canny
     return img_shape, rgb_img, canny_img
 
-def visualise(path, message_id):
+def visualise(path, reply_image_path):
     print ('start')
     img_shape, rgb_img, canny_img = image_read(path)
     canny_img_m = np.reshape(canny_img, [1, 128, 128, 1])
@@ -95,8 +95,8 @@ def visualise(path, message_id):
     w = np.array(img_shape)[1]
     prediction = cv2.resize(prediction[0], (w, h))
     prediction = (np.array((prediction+1)*127, np.uint8))
-    cv2.imwrite(CHANGED_IMAGE_PATH.format(message_id), prediction)
-    return CHANGED_IMAGE_PATH.format(message_id)
+    cv2.imwrite(reply_image_path, prediction)
+    print ('done')
 
 def save_image(message_id: str, save_path: str) -> None:
     """保存"""
@@ -110,16 +110,15 @@ def handle_image(event):
     message_id = event.message.id
 
     src_image_path = SRC_IMAGE_PATH.format(message_id)
-    main_image_path = MAIN_IMAGE_PATH.format(message_id)
-    preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
-
+    reply_image_path = CHANGED_IMAGE_PATH.format(message_id)
+    
     # 画像を保存
     save_image(message_id, src_image_path)
 
     # 画像の加工、保存
-    REPLY_IMAGE_PATH = visualise(src_image_path)
+    visualise(src_image_path, reply_image_path)
 
-    url = request.url_root + '/' + REPLY_IMAGE_PATH
+    url = request.url_root + '/' + reply_image_path
 
     # 画像の送信
     app.logger.info("url=" + url)
