@@ -73,16 +73,32 @@ import random
 
 SRC_IMAGE_PATH = "static/images/{}.jpg"
 CHANGED_IMAGE_PATH = 'static/images/{}_changed.jpg'
+img_size = 256
+
+def face_detect(image):
+    #カスケード型分類器に使用する分類器のデータ（xmlファイル）を読み込み
+    HAAR_FILE = "static/haarcascade_frontalface_default.xml"
+    cascade = cv2.CascadeClassifier(HAAR_FILE)
+    #カスケード型分類器を使用して画像ファイルから顔部分を検出する
+    face = cascade.detectMultiScale(image)
+    # 検出した場合
+    if len(face) > 0:
+        #顔部分を切り取る
+        x,y,w,h = face[0]
+        image = img[y:y+h, x:x+w]
+    return image
 
 def image_read(file_path):
     #カラーで読み込み
     rgb_img = cv2.imread(file_path)
-    img_shape = rgb_img.shape
-    
-    rgb_img = cv2.resize(rgb_img, (128, 128))
-    
+ 
     #グレイ変換
     grey_img = cv2.cvtColor(rgb_img, cv2.COLOR_BGR2GRAY)
+    grey_img = face_detect(grey_img)
+    img_shape = grey_img.shape
+
+    grey_img = cv2.resize(grey_img, (256, 256))  
+
     #エッジ検出
     sobel_img = cv2.Sobel(grey_img, cv2.CV_32F, 1, 1, 1, 5) #sobel
     laplacian_img = cv2.Laplacian(grey_img, cv2.CV_32F, 1, 5) #laplacian
@@ -96,10 +112,10 @@ def image_read(file_path):
 
 def visualise(path, reply_image_path):
     print ('start')
-    img_shape, rgb_img, canny_img = image_read(path)
-    canny_img_m = np.reshape(canny_img, [1, 128, 128, 1])
-    canny_img_m = np.array(canny_img_m, np.float32) / 128 -1
-    prediction = col_model.predict(canny_img_m)
+    img_shape, rgb_img, edge_img = image_read(path, img_size)
+    edge_img_m = np.reshape(edge_img, [1, img_size, img_size, 1])
+    edge_img_m = np.array(edge_img_m, np.float32) / 128 -1
+    prediction = col_model.predict(edge_img_m)
     h = np.array(img_shape)[0]
     w = np.array(img_shape)[1]
     prediction = cv2.resize(prediction[0], (w, h))
@@ -108,7 +124,6 @@ def visualise(path, reply_image_path):
     print ('done')
 
 def save_image(message_id: str, save_path: str) -> None:
-    """保存"""
     message_content = line_bot_api.get_message_content(message_id)
     with open(save_path, "wb") as f:
         for chunk in message_content.iter_content():
