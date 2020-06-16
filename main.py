@@ -78,12 +78,21 @@ def image_read(file_path):
     #カラーで読み込み
     rgb_img = cv2.imread(file_path)
     img_shape = rgb_img.shape
+    
     rgb_img = cv2.resize(rgb_img, (128, 128))
+    
     #グレイ変換
     grey_img = cv2.cvtColor(rgb_img, cv2.COLOR_BGR2GRAY)
     #エッジ検出
+    sobel_img = cv2.Sobel(grey_img, cv2.CV_32F, 1, 1, 1, 5) #sobel
+    laplacian_img = cv2.Laplacian(grey_img, cv2.CV_32F, 1, 5) #laplacian
     canny_img = cv2.Canny(grey_img, 50, 150) #canny
-    return img_shape, rgb_img, canny_img
+
+    # cv2_imshow(sobel_img)
+    # cv2_imshow(laplacian_img)
+    # cv2_imshow(canny_img)
+
+    return img_shape, rgb_img, laplacian_img
 
 def visualise(path, reply_image_path):
     print ('start')
