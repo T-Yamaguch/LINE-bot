@@ -89,18 +89,18 @@ def face_detect(image):
         else:
             y_o =0
 
-        if  y+1.25*h < image.shape[0]:
-            y_h = int(y+1.25*h)
+        if  y+1.75*h < image.shape[0]:
+            y_h = int(y+1.5*h)
         else:
             y_h = image.shape[0]
         
-        if x > 0.25*w:
-            x_o =int(x-0.25*w)
+        if x > 0.5*w:
+            x_o =int(x-0.5*w)
         else:
             x_o =0
         
-        if x+1.25*w < image.shape[1]:
-            x_w = int(x+1.25*w)
+        if x+1.5*w < image.shape[1]:
+            x_w = int(x+1.5*w)
         else:
             x_w = image.shape[1]
 
