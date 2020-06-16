@@ -118,17 +118,18 @@ def image_read(file_path, img_size):
     img_shape = grey_img.shape
 
     grey_img = cv2.resize(grey_img, (img_size, img_size))  
+    bured=cv2.GaussianBlur(grey_img,(5, 5), sigmaX=0)
 
     #エッジ検出
-    sobel_img = cv2.Sobel(grey_img, cv2.CV_32F, 1, 1, 1, 5) #sobel
-    laplacian_img = cv2.Laplacian(grey_img, cv2.CV_32F, 1, 5) #laplacian
-    canny_img = cv2.Canny(grey_img, 50, 150) #canny
+    sobel_img = cv2.Sobel(bured, cv2.CV_32F, 1, 1, 1, 5) #sobel
+    laplacian_img = cv2.Laplacian(bured, cv2.CV_32F, 1, 5) #laplacian
+    canny_img = cv2.Canny(bured, 50, 150) #canny
 
     # cv2_imshow(sobel_img)
     # cv2_imshow(laplacian_img)
     # cv2_imshow(canny_img)
 
-    return img_shape, rgb_img, laplacian_img
+    return img_shape, rgb_img, canny_img
 
 def visualise(path, reply_image_path):
     print ('start')
