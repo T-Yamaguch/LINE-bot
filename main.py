@@ -118,7 +118,7 @@ def image_read(file_path, img_size):
     img_shape = grey_img.shape
 
     grey_img = cv2.resize(grey_img, (img_size, img_size))  
-    bured=cv2.GaussianBlur(grey_img,(5, 5), sigmaX=0)
+    bured=cv2.GaussianBlur(grey_img,(5, 5), sigmaX=0.1)
 
     #エッジ検出
     sobel_img = cv2.Sobel(bured, cv2.CV_32F, 1, 1, 1, 5) #sobel
