@@ -71,6 +71,9 @@ import cv2
 import numpy as np
 import random
 
+SRC_IMAGE_PATH = "static/images/{}.jpg"
+CHANGED_IMAGE_PATH = 'static/images/{}_changed.jpg'
+
 def image_read(file_path):
     #カラーで読み込み
     rgb_img = cv2.imread(file_path)
@@ -82,7 +85,7 @@ def image_read(file_path):
     canny_img = cv2.Canny(grey_img, 50, 150) #canny
     return img_shape, rgb_img, canny_img
 
-def visualise(path):
+def visualise(path, message_id):
     print ('start')
     img_shape, rgb_img, canny_img = image_read(path)
     canny_img_m = np.reshape(canny_img, [1, 128, 128, 1])
@@ -92,9 +95,38 @@ def visualise(path):
     w = np.array(img_shape)[1]
     prediction = cv2.resize(prediction[0], (w, h))
     prediction = (np.array((prediction+1)*127, np.uint8))
-    cv2.imwrite('static/temp.jpg', prediction)
-    print ('done')
+    cv2.imwrite(CHANGED_IMAGE_PATH.format(message_id), prediction)
+    return CHANGED_IMAGE_PATH.format(message_id)
 
+def save_image(message_id: str, save_path: str) -> None:
+    """保存"""
+    message_content = line_bot_api.get_message_content(message_id)
+    with open(save_path, "wb") as f:
+        for chunk in message_content.iter_content():
+            f.write(chunk)
+
+@handler.add(MessageEvent, message=ImageMessage)
+def handle_image(event):
+    message_id = event.message.id
+
+    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
+    main_image_path = MAIN_IMAGE_PATH.format(message_id)
+    preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
+
+    # 画像を保存
+    save_image(message_id, src_image_path)
+
+    # 画像の加工、保存
+    REPLY_IMAGE_PATH = visualise(src_image_path)
+
+    url = request.url_root + '/' + REPLY_IMAGE_PATH
+
+    # 画像の送信
+    app.logger.info("url=" + url)
+    line_bot_api.reply_message(
+        event.reply_token,
+        ImageSendMessage(url, url)
+    )
 
 ##############################################################################
 
@@ -624,38 +656,6 @@ def handle_sticker_message(event):
 #             TextSendMessage(text='Save content.'),
 #             TextSendMessage(text=request.host_url + os.path.join('static', 'tmp', dist_name))
 #         ])
-@handler.add(MessageEvent, message=(ImageMessage))
-def handle_content_message(event):
-    print ('image')
-    if isinstance(event.message, ImageMessage):
-        ext = 'jpg'
-        print ('jpg')
-        return
-
-    message_content = line_bot_api.get_message_content(event.message.id)
-    with tempfile.NamedTemporaryFile(dir=static_tmp_path, prefix=ext + '-', delete=False) as tef:
-        for chunk in message_content.iter_content():
-            tef.write(chunk)
-            print ('saved')
-        tempfile_path = tef.name
-
-    dist_path = tempfile_path + '.' + ext
-    dist_name = os.path.basename(dist_path)
-    os.rename(tempfile_path, dist_path)
-
-    
-
-    image_path=os.path.join('static', 'tmp', dist_name)
-    print (os.path.exists(image_path))
-
-    visualise(os.path.join(image_path))
-    url = request.url_root + '/static/temp.jpg'
-    app.logger.info("url=" + url)
-
-    line_bot_api.reply_message(
-        event.reply_token,
-        ImageSendMessage(url, url)
-    )
 
 
 @handler.add(MessageEvent, message=FileMessage)
