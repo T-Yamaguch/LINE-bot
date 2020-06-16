@@ -109,7 +109,7 @@ def save_image(message_id: str, save_path: str) -> None:
 def handle_image(event):
     message_id = event.message.id
 
-    src_image_path = Path(SRC_IMAGE_PATH.format(message_id)).absolute()
+    src_image_path = SRC_IMAGE_PATH.format(message_id)
     main_image_path = MAIN_IMAGE_PATH.format(message_id)
     preview_image_path = PREVIEW_IMAGE_PATH.format(message_id)
 
