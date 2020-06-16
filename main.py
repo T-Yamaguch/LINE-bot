@@ -77,8 +77,7 @@ img_size = 256
 
 def face_detect(image):
     #カスケード型分類器に使用する分類器のデータ（xmlファイル）を読み込み
-    HAAR_FILE = "static/haarcascade_frontalface_default.xml"
-    cascade = cv2.CascadeClassifier(HAAR_FILE)
+    cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
     #カスケード型分類器を使用して画像ファイルから顔部分を検出する
     face = cascade.detectMultiScale(image)
     # 検出した場合
