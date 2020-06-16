@@ -85,9 +85,9 @@ def face_detect(image):
         #顔部分を切り取る
         x,y,w,h = face[0]
         if y > 0.5*h:
-            y=int(y-0.5*h)
+            y_o =int(y-0.5*h)
         else:
-            y=0
+            y_o =0
 
         if  y+1.5*h < image.shape[0]:
             y_h = int(y+1.5*h)
@@ -95,16 +95,16 @@ def face_detect(image):
             y_h = image.shape[0]
         
         if x > 0.5*w:
-            x=int(x-0.5*w)
+            x_o =int(x-0.5*w)
         else:
-            x=0
+            x_o =0
         
         if x+1.5*w < image.shape[1]:
             x_w = int(x+1.5*w)
         else:
             x_w = image.shape[1]
 
-        image = image[y:y_h, x:x_w]
+        image = image[y_o:y_h, x_o:x_w]
 
     return image
 
