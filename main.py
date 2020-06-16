@@ -88,7 +88,7 @@ def face_detect(image):
         image = img[y:y+h, x:x+w]
     return image
 
-def image_read(file_path):
+def image_read(path, img_size):
     #カラーで読み込み
     rgb_img = cv2.imread(file_path)
  
