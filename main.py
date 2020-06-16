@@ -88,7 +88,7 @@ def face_detect(image):
         image = img[y:y+h, x:x+w]
     return image
 
-def image_read(path, img_size):
+def image_read(file_path, img_size):
     #カラーで読み込み
     rgb_img = cv2.imread(file_path)
  
@@ -97,7 +97,7 @@ def image_read(path, img_size):
     grey_img = face_detect(grey_img)
     img_shape = grey_img.shape
 
-    grey_img = cv2.resize(grey_img, (256, 256))  
+    grey_img = cv2.resize(grey_img, (img_size, img_size))  
 
     #エッジ検出
     sobel_img = cv2.Sobel(grey_img, cv2.CV_32F, 1, 1, 1, 5) #sobel
