@@ -71,8 +71,8 @@ import cv2
 import numpy as np
 import random
 
-SRC_IMAGE_PATH = "static/images/{}.jpg"
-CHANGED_IMAGE_PATH = 'static/images/{}_changed.jpg'
+SRC_IMAGE_PATH = "static/images/temp.jpg"
+CHANGED_IMAGE_PATH = 'static/images/changed.jpg'
 img_size = 256
 
 def face_detect(image):
@@ -153,8 +153,8 @@ def save_image(message_id: str, save_path: str) -> None:
 def handle_image(event):
     message_id = event.message.id
 
-    src_image_path = SRC_IMAGE_PATH.format(message_id)
-    reply_image_path = CHANGED_IMAGE_PATH.format(message_id)
+    src_image_path = SRC_IMAGE_PATH
+    reply_image_path = CHANGED_IMAGE_PATH
     
     # 画像を保存
     save_image(message_id, src_image_path)
