@@ -84,7 +84,7 @@ def face_detect(image):
     if len(face) > 0:
         #顔部分を切り取る
         x,y,w,h = face[0]
-        image = img[y:y+h, x:x+w]
+        image = image[y:y+h, x:x+w]
     return image
 
 def image_read(file_path, img_size):
